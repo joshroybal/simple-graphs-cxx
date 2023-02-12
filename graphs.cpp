@@ -81,10 +81,12 @@ std::vector<std::pair<int, int> > Graph::readedges_()
 
 void Graph::randomgraph_(int n)
 {
+  srand(time(0));
+  // int n = 2 + (10 * (rand() / float(RAND_MAX)));
   for (int i = 0; i < n; ++i) nodes_.push_back(i);
   for (int i = 0; i < n; ++i) adjacencymap_[i] = std::vector<int>();
   for (int i = 0; i < n; ++i) adjacencymatrix_.push_back(std::vector<int>());
-  for (int i = 0; i < n; ++i)
+  for (int i = 0; i < n; ++i) 
     for (int j = 0; j < n; ++j)
       adjacencymatrix_[i].push_back(0);
   for (int i = 0; i < n - 1; ++i)
@@ -103,26 +105,29 @@ void Graph::randomgraph_(int n)
 
 std::vector<std::pair<int,std::string> > Graph::colornodes_() const
 {
-  std::string colors[] = {"red","orange","yellow","green","blue","indigo","violet","brown","cyan","gray","white"};
+  std::string colors[] = {"red","orange","yellow","green","blue","indigo","violet","brown","cyan","maroon","gray","slategray","darkgray","white","black"};
   std::vector<std::pair<int, std::string> > nodecolors;
-
+  
   std::vector<int> nodes = degreesort_();
 
   int coloridx = 0;
   while (nodes.size() > 0) {
     // find nodes not adjacent to head of vector
     std::vector<int> tmp = nonadjacent_(nodes.front());
+    std::vector<int> assigned;
     std::vector<int>::const_iterator cit;
     for (cit = tmp.begin(); cit != tmp.end(); ++cit) {
       if (std::count(nodes.begin(), nodes.end(), *cit) > 0
           &&
-          noneadjacentp_(*cit, tmp) == true) { // assign node color
+          noneadjacentp_(*cit, assigned) == true) { // assign node color
         nodecolors.push_back(std::pair<int,std::string>(*cit,colors[coloridx]));
+        assigned.push_back(*cit);
         nodes.erase(std::remove(nodes.begin(), nodes.end(), *cit), nodes.end());
         if (nodes.size() == 0) return nodecolors;
       }
     }
     ++coloridx;
+    if (coloridx == 15) return nodecolors;
   }
 
   return nodecolors;
@@ -184,9 +189,13 @@ bool Graph::adjacentp_(int v1, int v2) const
 bool Graph::noneadjacentp_(int node, const std::vector<int>& nodes) const
 {
   std::vector<int>::const_iterator cit;
-  for (cit = nodes.begin(); cit != nodes.end(); ++cit)
+  /* for (cit = nodes.begin(); cit != nodes.end(); ++cit)
     if (adjacentp_(node, *cit) == true)
+      return false; */
+  for (cit = nodes.begin(); cit != nodes.end(); ++cit) {
+    if (std::count(adjacencymap_.at(*cit).begin(), adjacencymap_.at(*cit).end(), node) > 0)
       return false;
+  }
   return true;
 }
 
@@ -242,7 +251,7 @@ void Graph::printadjacencymap_() const
 void Graph::printadjacencymatrix_() const
 {
   std::vector<std::vector<int> >::const_iterator row;
-  std::vector<int>::const_iterator col;
+  std::vector<int>::const_iterator col; 
   for (row = adjacencymatrix_.begin(); row != adjacencymatrix_.end(); ++row) {
     for (col = row->begin(); col != row->end(); ++col)
       std::cout << ' ' << *col;
