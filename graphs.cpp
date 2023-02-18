@@ -3,53 +3,15 @@
 #include <algorithm>
 #include "graphs.hpp"
 
-// public Graph class methods
-void Graph::readNodes()
-{
-  nodes_ = readnodes_();
-}
-
-void Graph::readEdges()
-{
-  edges_ = readedges_();
-}
-
-void Graph::randomGraph(int n)
-{
-  randomgraph_(n);
-}
-
-void Graph::printNodes() const
-{
-  printnodes_();
-}
-
-void Graph::printEdges() const
-{
-  printedges_();
-}
-
-void Graph::printGraph() const
-{
-  printgraph_();
-}
-
-void Graph::printAdjacencyMap() const
-{
-  printadjacencymap_();
-}
-
-void Graph::printAdjacencyMatrix() const
-{
-  printadjacencymatrix_();
-}
-
-void Graph::writeDotFile() const
-{
-  writedotfile_();
-}
-
 // private Graph class methods
+void Graph::copy(const Graph& g)
+{
+    nodes_ = g.nodes_;
+    edges_ = g.edges_;
+    adjacencymap_ = g.adjacencymap_;
+    adjacencymatrix_ = g.adjacencymatrix_;
+}
+
 std::vector<int> Graph::readnodes_()
 {
   int n;
@@ -239,9 +201,9 @@ void Graph::printadjacencymap_() const
   std::map<int, std::vector<int> >::const_iterator key;
   std::vector<int>::const_iterator value;
   for (key = adjacencymap_.begin(); key != adjacencymap_.end(); ++key) {
-    std::cout << key->first << ": ";
+    std::cout << char(97 + key->first) << ": ";
     for (value = key->second.begin(); value != key->second.end(); ++value) {
-      std::cout << *value;
+      std::cout << char(97 + *value);
       if (value + 1 != key->second.end()) std::cout << ',';
     }
     std::cout << '\n';

@@ -1,26 +1,29 @@
 #ifndef GRAPHS_HPP
 #define GRAPHS_HPP
 
+#include <string>
 #include <vector>
 #include <map>
 
 // simple graph class for now
 class Graph {
   public:
-    void readNodes();
-    void readEdges();
-    void randomGraph(int);
-    void printNodes() const;
-    void printEdges() const;
-    void printGraph() const;
-    void printAdjacencyMap() const;
-    void printAdjacencyMatrix() const;
-    void writeDotFile() const;
+    Graph() { nodes_ = readnodes_(); edges_ = readedges_(); }
+    Graph(int n) { randomgraph_(n); }
+    // Graph(int n, int m);
+    Graph(const Graph& g) { copy(g); }
+    void printNodes() const { printnodes_(); }
+    void printEdges() const { printedges_(); }
+    void printGraph() const { printgraph_(); }
+    void printAdjacencyList() const { printadjacencymap_(); }
+    void printAdjacencyMatrix() const { printadjacencymatrix_(); }
+    void writeDotFile() const { writedotfile_(); }
   private:
     std::vector<int> nodes_;
     std::vector<std::pair <int, int> > edges_;
     std::map<int, std::vector<int> > adjacencymap_;
     std::vector<std::vector<int> > adjacencymatrix_;
+    void copy(const Graph& g);
     std::vector<int> readnodes_();
     std::vector<std::pair<int, int> > readedges_();
     void randomgraph_(int);
